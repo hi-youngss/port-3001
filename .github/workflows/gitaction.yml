@@ -34,4 +34,4 @@ jobs:
             source ~/.nvm/nvm.sh
             npm install
             npm run build                           # 프로젝트 빌드
-            pm2 restart "port-3001"      # pm2를 사용하여 애플리케이션 재시작 (Node.js 애플리케이션용 프로세스 관리자)
+            pm2 reload "port-3001"      # pm2를 사용하여 애플리케이션 재시작 (Node.js 애플리케이션용 프로세스 관리자)
