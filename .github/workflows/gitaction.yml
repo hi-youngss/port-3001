@@ -28,10 +28,10 @@ jobs:
           password: ${{ secrets.NCLOUD_SSH_PASSWORD }} # SSH 인증을 위한 비밀번호
           port: 22 # SSH 포트
           script: |
-            cd /var/www/project-name                     # 원격 서버에서 프로젝트 디렉토리로 이동
-            git pull origin develop                     # Git 저장소에서 최신 변경사항 가져오기
+            cd front-tutorial/port-3001                     # 원격 서버에서 프로젝트 디렉토리로 이동
+            git pull origin main                     # Git 저장소에서 최신 변경사항 가져오기
             export NVM_DIR=~/.nvm
             source ~/.nvm/nvm.sh
             npm install
             npm run build                           # 프로젝트 빌드
-            pm2 restart "project-name"      # pm2를 사용하여 애플리케이션 재시작 (Node.js 애플리케이션용 프로세스 관리자)
+            pm2 restart "port-3001"      # pm2를 사용하여 애플리케이션 재시작 (Node.js 애플리케이션용 프로세스 관리자)
