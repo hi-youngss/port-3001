@@ -1,0 +1,37 @@
+name: devlopment
+on:
+  push:
+    branches:
+      - main #push 발생하면 아래 작업 진행할 브랜치 이름 적어주면 됨
+jobs:
+  #첫번째 작업 : 디스코드에 이벤트 발생했다는 알림 보내기 (선택사항)
+  event-notification:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Disord notification
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "The project has been deployed."
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        if: always() # Pick up events even if the job fails or is canceled.
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 원격 접속 배포
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.NCLOUD_SSH_HOST }} # 원격 서버의 호스트명 또는 IP 주소
+          username: ${{ secrets.NCLOUD_SSH_USERNAME }} # SSH 인증을 위한 사용자 이름
+          password: ${{ secrets.NCLOUD_SSH_PASSWORD }} # SSH 인증을 위한 비밀번호
+          port: 22 # SSH 포트
+          script: |
+            cd /var/www/project-name                     # 원격 서버에서 프로젝트 디렉토리로 이동
+            git pull origin develop                     # Git 저장소에서 최신 변경사항 가져오기
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh
+            npm install
+            npm run build                           # 프로젝트 빌드
+            pm2 restart "project-name"      # pm2를 사용하여 애플리케이션 재시작 (Node.js 애플리케이션용 프로세스 관리자)
